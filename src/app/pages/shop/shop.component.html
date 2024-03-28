@@ -720,7 +720,11 @@
             <div class="sidebar-block px-3 px-lg-0"><a class="d-lg-none block-toggler" data-bs-toggle="collapse" href="#priceFilterMenu" aria-expanded="false" aria-controls="priceFilterMenu">Filter by price<span class="block-toggler-icon"></span></a>
               <div class="expand-lg collapse" id="priceFilterMenu">
                 <h5 class="sidebar-heading d-none d-lg-block">Price  </h5>
-                <div class="mt-4 mt-lg-0" id="slider-snap"> </div>
+                <!-- <div class="mt-4 mt-lg-0" id="slider-snap"> </div> -->
+                <mat-slider min="0" max="250"  discrete >
+                  <input value="40" matSliderStartThumb>
+                  <input value="110" matSliderEndThumb>
+                </mat-slider>
                 <div class="nouislider-values">
                   <div class="min">From $<span id="slider-snap-value-lower"></span></div>
                   <div class="max">To $<span id="slider-snap-value-upper"></span></div>
