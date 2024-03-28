@@ -1,0 +1,5 @@
+#collapseExample{
+    position: absolute;
+    width: 90%;
+    z-index: 1;  
+}
