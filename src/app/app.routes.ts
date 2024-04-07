@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { accessControlsGuard } from './guards/access-controls.guard';
 
 export const routes: Routes = [
     {
@@ -23,7 +24,8 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
+        canActivate:[accessControlsGuard]
     },
     {
         path: 'register',
@@ -38,12 +40,16 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent)
     },
     {
+        path: 'account',
+        loadComponent: () => import('./pages/account/account.component').then(m => m.AccountComponent)
+    },
+    {
         path: 'test',
         loadComponent: () => import('./pages/test/test.component').then(m => m.TestComponent)
     },
-    {
-        path: '**',
-        redirectTo: 'home'
-    }
+    // {
+    //     path: '**',
+    //     redirectTo: 'home'
+    // }
 
 ];

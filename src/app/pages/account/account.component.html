@@ -1,95 +1,66 @@
     <!-- navbar-->
 <app-header></app-header>
     <!-- Hero Section-->
-    
     <section class="hero py-6">
       <div class="container">
         <!-- Breadcrumbs -->
         <ol class="breadcrumb ps-0 ">
           <li class="breadcrumb-item"><a href="https://demo.bootstrapious.com/varkala/2-1/index.html">Home</a></li>
-          <li class="breadcrumb-item active">Customer zone        </li>
+          <li class="breadcrumb-item active">Wishlist        </li>
         </ol>
         <!-- Hero Content-->
         <div class="hero-content">
-          <h1 class="hero-heading mb-3">Customer zone</h1>
-          <div><p class="text-muted">You can use the navbar-modal link or this page for customers' sign in.</p></div>
+          <h1 class="hero-heading">Wishlist</h1>
+          <div><p class="lead text-muted mb-0">You have 3 items in your wishlist.</p></div>
         </div>
       </div>
     </section>
-    <!-- customer login-->
-    <section class="pb-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-5">
-            <div class="card">
-              <div class="card-header py-4 px-5">
-                <h5 class="mb-0">Login</h5>
-              </div>
-              <div class="card-body p-5">
-                <p class="lead">Already our customer?</p>
-                <p class="text-muted text-sm">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet.</p>
-                <hr class="my-4">
-                <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-                  <div class="mb-3">
-                    <label class="form-label" for="emailLogin">Email</label>
-                    <input class="form-control" id="emailLogin" name="email" type="text" #emailField="ngModel" [(ngModel)]="modelLogin.email" required>
-                    @if(emailField.errors?.["required"] && emailField.touched){
-                      <div class="text-danger">
-                        L'email est requis.
-                      </div>
-                    }
-                    
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="passwordLogin">Password</label>
-                    <input class="form-control" id="passwordLogin" name="password" #passwordField="ngModel" type="password" [(ngModel)]="modelLogin.password" required>
-                    @if(passwordField.errors?.["required"] && passwordField.touched){
-                      <div class="text-danger">
-                        Le mot de passe est requis.
-                      </div>
-                    }
-                  </div>
-                  <button class="btn btn-dark" type="submit" [disabled]="!loginForm.valid"><i class="fa fa-sign-in-alt me-2"></i> Log in</button>
-                  <div class="flex my-2">
-                    <cool-google-button color="dark" (click)="onGoogleLogin()">
-                      Connexion avec Google
-                    </cool-google-button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5 offset-lg-1">
-            <div class="card">
-              <div class="card-header py-4 px-5">
-                <h5 class="mb-0">New account</h5>
-              </div>
-              <div class="card-body p-5">
-                <p class="lead">Not our registered customer yet?</p>
-                <p class="text-muted text-sm">With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
-                <p class="text-muted text-sm">If you have any questions, please feel free to <a href="https://demo.bootstrapious.com/varkala/2-1/contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
-                <hr class="my-4">
-                <form action="https://demo.bootstrapious.com/varkala/2-1/customer-orders.html" method="get">
-                  <div class="mb-3">
-                    <label class="form-label" for="name">Name</label>
-                    <input class="form-control" id="name" type="text">
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="emailSignup">Email</label>
-                    <input class="form-control" id="emailSignup" type="text">
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="passwordSignup">Password</label>
-                    <input class="form-control" id="passwordSignup" type="password">
-                  </div>
-                  <button class="btn btn-dark" type="submit"><i class="far fa-user me-2"></i>Register                                </button>
-                </form>
-              </div>
-            </div>
+    <!-- Wishlist Section-->
+    <div class="container pb-6">
+      <div class="row">
+        
+        <div class="col-lg-8 col-xl-9">
+          <div class="cart mb-5 mb-lg-0">
+            @if(selection === Account.wishlist){
+              <app-wishlist></app-wishlist>
+            }@else if(selection === Account.addresses){
+              <app-addresses></app-addresses>
+            }@else if(selection === Account.profile){
+              <app-profile></app-profile>
+            }@else if(selection === Account.orders){
+              <app-orders></app-orders>
+            }
           </div>
         </div>
+        <!-- Customer Sidebar-->
+        <div class="col-xl-3 col-lg-4 mb-5">
+          <div class="customer-sidebar card border-0"> 
+            <div class="customer-profile"><a class="d-inline-block" href="#"><img class="img-fluid rounded-circle customer-image" src="https://demo.bootstrapious.com/varkala/2-1/img/avatar/avatar-0.jpg" alt=""></a>
+              <h5>Jane Doe</h5>
+              <p class="text-muted text-sm mb-0">Los Angeles, CA</p>
+            </div>
+                <nav class="list-group customer-nav cursor"><a class="list-group-item d-flex justify-content-between align-items-center" (click)="profileSelection(Account.orders)"><span>
+                  Orders
+                </span>
+                <div class="badge rounded-pill bg-dark fw-normal px-3">5</div></a>
+                <a class="list-group-item d-flex justify-content-between align-items-center cursor" (click)="profileSelection(Account.profile)" >
+                  <span>Profile</span>
+                </a>
+                <a class="list-group-item d-flex justify-content-between align-items-center cursor" (click)="profileSelection(Account.addresses)" >
+                  <span>Addresses</span>
+                </a>
+                <a class="list-group-item d-flex justify-content-between align-items-center cursor" (click)="profileSelection(Account.wishlist)" >
+                  <span>Wishlist</span>
+                </a>
+                <a class="list-group-item d-flex justify-content-between align-items-center cursor" (click)="profileSelection(Account.logout)" >
+                  <span>Log out</span>
+                </a>
+            </nav>
+          </div>
+        </div>
+        <!-- /Customer Sidebar-->
       </div>
-    </section>
+    </div>
     <!-- Sidebar Cart Modal-->
     <div class="modal fade modal-right" id="sidebarCart" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -137,7 +108,7 @@
                       <svg class="svg-icon sidebar-cart-icon">
                         <use xlink:href="#close-1"> </use>
                       </svg></a>
-                    <div class="ps-3"> <a class="navbar-cart-product-link text-dark link-animated" href="https://demo.bootstrapious.com/varkala/2-1/detail-1.html">White Tee</a><small class="d-block text-muted">Quantity: 1 </small><strong class="d-block text-sm">$75.00     </strong></div>
+                    <div class="ps-3"> <a class="navbar-cart-product-link text-dark link-animated" href="https://demo.bootstrapious.com/varkala/2-1/detail-1.html">White Tee</a><small class="d-block text-muted">Quantity: 1 </small><strong class="d-block text-sm">$75.00 </strong></div>
                   </div>
                 </div>
               </div>
@@ -258,7 +229,7 @@
                     </div>
                   </div>
                   <div class="d-grid mb-3">
-                    <button class="btn btn-outline-dark" type="submit" ><i class="fa fa-sign-in-alt me-2"></i> Log in</button>
+                    <button class="btn btn-outline-dark" type="submit"><i class="fa fa-sign-in-alt me-2"></i> Log in</button>
                   </div>
                 </form>
                 <hr class="my-3 hr-text letter-spacing-2" data-content="OR">
@@ -298,4 +269,130 @@
       </div>
     </div>
     <!-- Footer-->
-<app-footer></app-footer>
+    <footer>
+      <!-- Services block-->
+      <div class="py-5 py-lg-6 bg-gray-100">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-sm-6 py-4 service-column">
+              <svg class="svg-icon service-icon">
+                <use xlink:href="#delivery-time-1"> </use>
+              </svg>
+              <div class="service-text">
+                <h6 class="text-sm mb-1">Free shipping &amp; return</h6>
+                <p class="text-muted fw-light text-sm mb-0">Free Shipping over $300</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 py-4 service-column">
+              <svg class="svg-icon service-icon">
+                <use xlink:href="#money-1"> </use>
+              </svg>
+              <div class="service-text">
+                <h6 class="text-sm mb-1">Money back guarantee</h6>
+                <p class="text-muted fw-light text-sm mb-0">30 Days Money Back Guarantee</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 py-4 service-column">
+              <svg class="svg-icon service-icon">
+                <use xlink:href="#special-price-1"> </use>
+              </svg>
+              <div class="service-text">
+                <h6 class="text-sm mb-1">Best prices</h6>
+                <p class="text-muted fw-light text-sm mb-0">Always the best prices</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 py-4 service-column">
+              <svg class="svg-icon service-icon">
+                <use xlink:href="#customer-support-1"> </use>
+              </svg>
+              <div class="service-text">
+                <h6 class="text-sm mb-1">020-800-456-747</h6>
+                <p class="text-muted fw-light text-sm mb-0">24/7 Available Support</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Main block - menus, subscribe form-->
+      <div class="py-6 text-muted"> 
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-5 pe-lg-5 pe-xl-6 mb-5 mb-lg-0">
+              <h6 class="text-dark letter-spacing-1 mb-4">Be in touch</h6>
+              <p class="text-sm mb-3"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. At itaque temporibus.</p>
+              <form action="#" id="newsletter-form">
+                <div class="input-group input-group-underlined mb-3">
+                  <input class="form-control form-control-underlined" type="email" placeholder="Your Email Address" aria-label="Your Email Address">
+                  <button class="btn btn-underlined text-gray-700 py-0" type="button"> 
+                    <svg class="svg-icon w-2rem h-2rem">
+                      <use xlink:href="#envelope-1"> </use>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-7">      
+              <div class="row">                
+                <div class="col-lg-4"><a class="d-lg-none block-toggler my-3" data-bs-toggle="collapse" href="#footerMenu0" aria-expanded="false" aria-controls="footerMenu0">Shop<span class="block-toggler-icon"></span></a>
+                  <!-- Footer collapsible menu-->
+                  <div class="expand-lg collapse" id="footerMenu0">
+                    <h6 class="text-dark letter-spacing-1 mb-4 d-none d-lg-block">Shop</h6>
+                    <ul class="list-unstyled text-sm pt-2 pt-lg-0">
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">For Women</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">For Men</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Stores</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Our Blog</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Shop</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4"><a class="d-lg-none block-toggler my-3" data-bs-toggle="collapse" href="#footerMenu1" aria-expanded="false" aria-controls="footerMenu1">Company<span class="block-toggler-icon"></span></a>
+                  <!-- Footer collapsible menu-->
+                  <div class="expand-lg collapse" id="footerMenu1">
+                    <h6 class="text-dark letter-spacing-1 mb-4 d-none d-lg-block">Company</h6>
+                    <ul class="list-unstyled text-sm pt-2 pt-lg-0">
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Login</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Register</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Wishlist</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Our Products</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated" href="#">Checkouts</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4"><a class="d-lg-none block-toggler my-3" data-bs-toggle="collapse" href="#footerMenu2" aria-expanded="false" aria-controls="footerMenu2">Your account<span class="block-toggler-icon"></span></a>
+                  <!-- Footer collapsible menu-->
+                  <div class="expand-lg collapse" id="footerMenu2">
+                    <h6 class="text-dark letter-spacing-1 mb-4 d-none d-lg-block">Your account</h6>
+                    <ul class="list-unstyled text-sm pt-2 pt-lg-0">
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated">Login</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated">Register</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated">Wishlist</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated">Our Products</a></li>
+                      <li class="mb-2"> <a class="text-muted text-dark-hover link-animated">Checkouts</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Copyright section of the footer-->
+      <div class="py-4 fw-light text-muted">
+        <div class="container">
+          <div class="row align-items-center text-sm text-gray-500">
+            <div class="col-lg-4 text-center text-lg-start">
+              <p class="mb-lg-0">&copy; 2022, Your company.  All rights reserved.</p>
+            </div>
+            <div class="col-lg-8">
+              <ul class="list-inline mb-0 mt-2 mt-md-0 text-center text-lg-end">
+                <li class="list-inline-item"> <a class="text-reset" href="#">Terms &amp; Conditions </a></li>
+                <li class="list-inline-item"> <a class="text-reset" href="#">Privacy &amp; cookies </a></li>
+                <li class="list-inline-item"> <a class="text-reset" href="#">Accessibility </a></li>
+                <li class="list-inline-item"> <a class="text-reset" href="#">Customer Data Promise </a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>

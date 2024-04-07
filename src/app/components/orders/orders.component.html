@@ -1,0 +1,152 @@
+
+@if(!detailSelected){
+  <table class="table table-hover table-responsive-md">
+    <thead class="bg-light">
+      <tr>
+        <th class="py-4 ps-4 text-sm border-0">Order #</th>
+        <th class="py-4 text-sm border-0">Date</th>
+        <th class="py-4 text-sm border-0">Total</th>
+        <th class="py-4 text-sm border-0">Status</th>
+        <th class="py-4 text-sm border-0">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="ps-4 py-5 align-middle"># 1735</th>
+        <td class="py-5 align-middle">22/6/2017</td>
+        <td class="py-5 align-middle">$150.00</td>
+        <td class="py-5 align-middle"><span class="badge badge-info-light">Being prepared</span></td>
+        <td class="py-5 align-middle"><a class="btn btn-outline-dark btn-sm" (click)="selectedOrder()" >View</a></td>
+      </tr>
+      <tr>
+        <th class="ps-4 py-5 align-middle"># 1734</th>
+        <td class="py-5 align-middle">7/5/2017</td>
+        <td class="py-5 align-middle">$150.00</td>
+        <td class="py-5 align-middle"><span class="badge badge-warning-light">Action needed</span></td>
+        <td class="py-5 align-middle"><a class="btn btn-outline-dark btn-sm" (click)="selectedOrder()">View</a></td>
+      </tr>
+      <tr>
+        <th class="ps-4 py-5 align-middle"># 1730</th>
+        <td class="py-5 align-middle">30/9/2016</td>
+        <td class="py-5 align-middle">$150.00</td>
+        <td class="py-5 align-middle"><span class="badge badge-success-light">Received</span></td>
+        <td class="py-5 align-middle"><a class="btn btn-outline-dark btn-sm" (click)="selectedOrder()">View</a></td>
+      </tr>
+      <tr>
+        <th class="ps-4 py-5 align-middle"># 1705</th>
+        <td class="py-5 align-middle">22/6/2016</td>
+        <td class="py-5 align-middle">$150.00</td>
+        <td class="py-5 align-middle"><span class="badge badge-danger-light">Cancelled</span></td>
+        <td class="py-5 align-middle"><a class="btn btn-outline-dark btn-sm" (click)="selectedOrder()">View</a></td>
+      </tr>
+    </tbody>
+  </table>
+}@else {
+  <div class="cart">
+    <div class="cart-wrapper">
+      <div class="cart-header">
+        <div class="row">
+          <div class="col-6">Item</div>
+          <div class="col-2 text-center">Price</div>
+          <div class="col-2 text-end">Quantity</div>
+          <div class="col-2 text-end">Total</div>
+        </div>
+      </div>
+      <div class="cart-body">
+        <!-- Product-->
+        <div class="cart-item">
+          <div class="row d-flex align-items-center text-center">
+            <div class="col-6">
+              <div class="d-flex align-items-center"><a href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><img class="cart-item-img" src="https://demo.bootstrapious.com/varkala/2-1/img/product/product-square-ian-dooley-347968-unsplash.jpg" alt="..."></a>
+                <div class="cart-title text-start"><a class="text-dark" href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><strong>Skull Tee</strong></a><br><span class="text-muted text-sm">Size: Large</span><br><span class="text-muted text-sm">Colour: Green</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">$65.00</div>
+            <div class="col-2">4
+            </div>
+            <div class="col-2 text-center">$260.00</div>
+          </div>
+        </div>
+        <!-- Product-->
+        <div class="cart-item">
+          <div class="row d-flex align-items-center text-center">
+            <div class="col-6">
+              <div class="d-flex align-items-center"><a href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><img class="cart-item-img" src="https://demo.bootstrapious.com/varkala/2-1/img/product/product-square-kyle-loftus-596319-unsplash.jpg" alt="..."></a>
+                <div class="cart-title text-start"><a class="text-dark" href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><strong>Transparent Blouse</strong></a><br><span class="text-muted text-sm">Size: Medium</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">$55.00</div>
+            <div class="col-2">3
+            </div>
+            <div class="col-2 text-center">$165.00</div>
+          </div>
+        </div>
+        <!-- Product-->
+        <div class="cart-item">
+          <div class="row d-flex align-items-center text-center">
+            <div class="col-6">
+              <div class="d-flex align-items-center"><a href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><img class="cart-item-img" src="https://demo.bootstrapious.com/varkala/2-1/img/product/product-square-serrah-galos-494312-unsplash.jpg" alt="..."></a>
+                <div class="cart-title text-start"><a class="text-dark" href="https://demo.bootstrapious.com/varkala/2-1/detail.html"><strong>White Tee</strong></a><br><span class="text-muted text-sm">Size: Medium</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">$55.00</div>
+            <div class="col-2">3
+            </div>
+            <div class="col-2 text-center">$165.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <p class="text-muted text-sm mb-4">Shipping and additional costs are calculated based on values you have entered.</p>
+          <table class="table card-text">
+            <tr>
+              <th class="py-4">Order Subtotal </th>
+              <td class="py-4 text-end text-muted">$390.00</td>
+            </tr>
+            <tr>
+              <th class="py-4">Shipping and handling</th>
+              <td class="py-4 text-end text-muted"> $10.00</td>
+            </tr>
+            <tr>
+              <th class="py-4">Tax</th>
+              <td class="py-4 text-end text-muted">$0.00</td>
+            </tr>
+            <tr>
+              <th class="py-4 border-0">Total</th>
+              <td class="py-4 text-end h3 fw-normal border-0">$400.00</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0"> Invoice address</h5>
+        </div>
+        <div class="card-body p-4">
+          <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y 73J<br>England<br><strong>Great Britain</strong></p>
+        </div>
+      </div>
+      <div class="card mb-5"> 
+        <div class="card-header">
+          <h5 class="mb-0">Shipping address</h5>
+        </div>
+        <div class="card-body p-4">
+          <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y 73J<br>England<br><strong>Great Britain</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+}

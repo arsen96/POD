@@ -2096,6 +2096,10 @@
     }
   }
   
+  .cursor{
+    cursor: pointer;
+  }
+
   .form-label {
     margin-bottom: .5rem
   }
@@ -18239,4 +18243,37 @@
   }
 
 
-  
+  #small-loader{
+    display: block;
+    background-color: transparent;
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    z-index:999;
+    background-color: rgba(0,0,0, 0.4);
+  }
+  #small-loader #loaderGIF {
+    background-color: transparent;
+  }
+  #small-loader.on{
+    opacity: 1;
+  }
+
+  #loaderGIF{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  width: 20vh;
+  height: 20vh;
+  background-color: #574c4c44;
+  border-radius: 10vh;
+}
