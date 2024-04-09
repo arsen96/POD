@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import AOS from 'aos';
-import { GoogleApiService, UserInfo } from './google-api.service';
+import { OauthService, UserInfo } from './services/auth/oauth.service';
 import { LoaderComponent } from './components/loader/loader.component';
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ export class AppComponent {
   title = 'e-commerceAngular';
   userInfo:UserInfo
   
-  constructor(private readonly googleApi:GoogleApiService){
+  constructor(private readonly googleApi:OauthService){
     googleApi.userProfileSubject.subscribe((info:any) => {
       this.userInfo = info;
     })
@@ -22,13 +22,5 @@ export class AppComponent {
   ngOnInit(){
     AOS.init({disable: 'mobile'});
     AOS.refresh();
-  }
-
-  isLoggedIn(){
-    return this.googleApi.isLoggedIn();
-  }
-
-  logout(){
-    return this.googleApi.signOut();
   }
 }

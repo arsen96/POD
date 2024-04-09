@@ -83,9 +83,52 @@
           </div>
         </form>
         <ul class="list-inline mb-0 d-none d-lg-block">
-          <li class="list-inline-item me-3"><a class="text-dark text-primary-hover" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
-            <fa-icon [icon]="faUser" size="2xl"></fa-icon></a>
-            </li>
+
+          @if(authService.isAuthenticated){
+            <div class="dropdown list-inline-item me-3">
+              <fa-icon [icon]="faUser" size="2xl" data-bs-toggle="dropdown" class="cursor"></fa-icon>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li class="dropdown-item cursor">
+                  <div class="loginContainer d-flex align-items-center gap-2 my-2">
+                    <div class="iconHeader">
+                      <fa-icon [icon]="faUserSolid" size="2xl"></fa-icon>
+                    </div>
+                    <p class="m-0">Mon profil</p>
+                  </div>
+                </li>
+                <li class="dropdown-item cursor">
+                  <div class="loginContainer d-flex align-items-center gap-2 my-2">
+                    <div class="iconHeader">
+                      <fa-icon [icon]="faBell" size="2xl"></fa-icon>
+                    </div>
+                    <p class="m-0">Mes commandes</p>
+                  </div>
+                </li>
+  
+                <li class="dropdown-item cursor">
+                  <div class="loginContainer d-flex align-items-center gap-2 my-2">
+                    <div class="iconHeader">
+                      <fa-icon [icon]="faHeartSolid" size="2xl"></fa-icon>
+                    </div>
+                    <p class="m-0">Ma liste de souhait</p>
+                  </div>
+                </li>
+  
+                <li class="dropdown-item cursor" (click)="authService.logout()">
+                  <div class="loginContainer d-flex align-items-center gap-2 my-2">
+                    <div class="iconHeader iconLogout">
+                      <fa-icon [icon]="faRightFromBracket" size="2xl"></fa-icon>
+                    </div>
+                    <p class="m-0">Déconnexion</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          }@else if(router.url !== "/login"){
+            <li class="list-inline-item me-3"><a class="text-dark text-primary-hover" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <fa-icon [icon]="faUser" size="2xl"></fa-icon>
+            </a></li>
+          }
           <li class="list-inline-item me-3"><a class="text-dark text-primary-hover position-relative" href="https://demo.bootstrapious.com/varkala/2-1/wishlist.html">
             <fa-icon [icon]="faHeart" size="2xl"></fa-icon>
               <div class="navbar-icon-badge">3</div></a></li>

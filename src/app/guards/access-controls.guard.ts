@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { jwtDecode } from "jwt-decode";
-import { AuthService } from '../services/auth.service';
+import { StandardAuth } from '../services/auth/standard.service';
 
 
 
@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 class PermissionsService {
-  constructor(public router:Router,public authService:AuthService){
+  constructor(public router:Router,public authService:StandardAuth){
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -31,15 +31,14 @@ class PermissionsService {
   providedIn: 'root',
 })
 class isAuth {
-  constructor(public router:Router,public authService:AuthService){
+  constructor(public router:Router,public authService:StandardAuth){
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // Vérifie si le token n'est pas expiré
-        console.log("this.authService.isAuthenticated",this.authService.isAuthenticated)
         if (this.authService.isAuthenticated) {
             // Token expiré
-            // this.router.navigate(['/home'], { queryParams: { returnUrl: state.url }});
-            return true;
+            this.router.navigate(['/home']);
+            return false;
         }
     // Pas de token trouvé, redirection vers la page de connexion
     return true;

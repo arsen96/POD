@@ -1,12 +1,4 @@
 
 
-@if(isLoggedIn() && userInfo.info){
-    Hi {{userInfo.info.name}}   
-    email {{userInfo.info.email}} 
-    picture {{userInfo.info.picture}}  
-    
-    <button (click)="logout()">Logout from google</button>
-}
-
 <app-loader></app-loader>
 <router-outlet />

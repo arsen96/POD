@@ -1,5 +1,10 @@
-#collapseExample{
-    position: absolute;
-    width: 90%;
-    z-index: 1;  
+.iconLogout{
+    transform: rotate(180deg);
+    display: flex;
+    width: fit-content;
+}
+
+.iconLogin{
+    display: flex;
+    width: fit-content;
 }
