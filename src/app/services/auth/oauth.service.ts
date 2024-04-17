@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { Observable, Subject, catchError, map, shareReplay, tap, throwError } from 'rxjs';
+import {Subject,lastValueFrom,} from 'rxjs';
 import { AuthServiceBase } from './auth-service-base';
-import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 
 export interface UserInfo {
@@ -17,33 +16,13 @@ export interface UserInfo {
 }
 
 
-const oAuthConfig:AuthConfig = {
-   // Url of the Identity Provider
+const googleAuthConfig:AuthConfig = {
    issuer: 'https://accounts.google.com',
-
-   // URL of the SPA to redirect the user to after login
    redirectUri: window.location.origin + '/login',
-
    strictDiscoveryDocumentValidation:false,
-
-   // The SPA's id. The SPA is registerd with this id at the auth-server
-   // clientId: 'server.code',
-   clientId: '773882615556-1eejcai1psd4eudoesf7fqq3i2gntvo5.apps.googleusercontent.com',
-
-   // Just needed if your auth server demands a secret. In general, this
-   // is a sign that the auth server is not configured with SPAs in mind
-   // and it might not enforce further best practices vital for security
-   // such applications.
+   clientId: '',
    dummyClientSecret: 'secret',
-
-   //responseType: 'code',
-
-   // set the scope for the permissions the client should request
-   // The first four are defined by OIDC.
-   // Important: Request offline_access to get a refresh token
-   // The api scope is a usecase specific one
    scope: 'openid profile email ',
-
    showDebugInformation: true,
 }
 
@@ -53,10 +32,14 @@ const oAuthConfig:AuthConfig = {
 export class OauthService extends AuthServiceBase{
 
   userProfileSubject = new Subject<UserInfo>();
-
+  LINKEDIN_CLIENT_ID:string;
+  public environment:any
   constructor(public oAuthService:OAuthService) {
     super();
-    oAuthService.configure(oAuthConfig);
+    this.environment = environment;
+    this.LINKEDIN_CLIENT_ID = this.environment.LINKEDIN_CLIENT_ID
+    googleAuthConfig.clientId = this.environment.GOOGLE_CLIENT_ID
+    oAuthService.configure(googleAuthConfig);
    }
 
    public loginOauth(){
@@ -73,28 +56,15 @@ export class OauthService extends AuthServiceBase{
     })
    }
 
-   decodeJWT(token: string) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
 
-    return JSON.parse(jsonPayload);
-  }
-
-  override login(email:string): Observable<string>{
+  async loginOauthApi(endpoint:string,data:Array<{key:string,value:string}>): Promise<string | null>{
     const formData = new FormData();
-    formData.append("email",email)
-    const token = super.login(formData,`${this.postApi}/google_oauth`);
-    return token;
-  }
+    data.forEach((formDataElement) => {
+      formData.append(formDataElement.key,formDataElement.value)
+    })
+    return await lastValueFrom(super.login(formData,`${this.postApi}/${endpoint}`));
+}
   
-
-   isLoggedIn():boolean{
-    return this.oAuthService.hasValidAccessToken();
-   }
-
    override logout(){
     this.oAuthService.logOut();
     super.logout();

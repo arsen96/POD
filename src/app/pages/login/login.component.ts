@@ -1,89 +1,133 @@
-import { Component,inject } from '@angular/core';
+import { Component,OnInit,inject, model } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { StandardAuth } from '../../services/auth/standard.service';
 import { LoadingService } from '../../services/loading.service';
 import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../services/global.service';
-import { CoolSocialLoginButtonsModule } from '@angular-cool/social-login-buttons';
+import { CoolSocialLoginButtonsModule  } from '@angular-cool/social-login-buttons';
 import { OauthService } from '../../services/auth/oauth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import {faLinkedin,faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClient } from '@angular/common/http';
+import { MessageService } from '../../services/message.service';
+import { MessageComponent } from '../../components/message/message.component';
+import { lastValueFrom } from 'rxjs';
+
+export class FormAuthModel{
+  email:string;
+  password:string;
+  username?:string
+}
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HeaderComponent,FooterComponent,FormsModule,CoolSocialLoginButtonsModule ],
+  imports: [HeaderComponent,MessageComponent, FooterComponent,FormsModule,CoolSocialLoginButtonsModule,FontAwesomeModule ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers:[MessageService]
 })
-export class LoginComponent {
+
+export class LoginComponent  {
   public globalService = inject(GlobalService);
-  public authService = inject(StandardAuth)
+  public standardAuthService = inject(StandardAuth)
   public loaderService = inject(LoadingService);
-  public googleService = inject(OauthService)
+  public oauthService = inject(OauthService)
   public router = inject(Router)
+  public http = inject(HttpClient);
+  faLinkedin = faLinkedin;
+  faGoogle = faGoogle;
 
   public smallLoader = true;
+  modelLogin: FormAuthModel = {email:"",password:""};
+  modelRegister: FormAuthModel = {email:"",password:"",username:""};
+  public error = {
+    type:'login' || 'register'
+  }
 
-  modelLogin: {email:string;password:string} = {email:"",password:""};
-  constructor(public route:ActivatedRoute){
-    this.route.fragment.subscribe((fragment) => {
+  constructor(public route:ActivatedRoute,public messageService:MessageService){
+    this.route.fragment.subscribe(async (fragment) => {
       if (fragment) {
         const fragmentParams = new URLSearchParams(fragment);
         const accessToken = fragmentParams.get('id_token') as string;
-        const result = this.googleService.decodeJWT(accessToken);
+        const result = this.oauthService.decodeJWT(accessToken);
 
         if(result.email_verified){
-          const loginGoogle$ = this.googleService.login(result.email);
-          const loginGoogle = this.loaderService.showLoaderUntilCompleted(loginGoogle$)
-          loginGoogle.subscribe((token) => {
-            this.router.navigateByUrl("home")
-          })
+          this.loaderService.setLoading(true);
+          try{
+            this.loaderService.setLoading(true)
+            await this.oauthService.loginOauthApi("oauth_token",[{key:"email",value:result.email}]);
+            this.router.navigateByUrl("home").then(() => {
+             this.loaderService.setLoading(false)
+            })
+          }catch(err){
+            console.log("error",err)
+          }
         }
       }
     })
-  }
 
 
-
-  ngOnInit(){
-     
-  }
-
-   
-
-  onSubmit(){
-    const $login = this.authService.login(this.modelLogin)
-    const loginData = this.loaderService.showLoaderUntilCompleted($login)
-    loginData.subscribe({
-      next:() => {
-      this.router.navigateByUrl('home')
-    },error: (error) => {
-      console.log("error",error)
-    }
+    this.route.queryParams.subscribe(async (param) => {
+      if(param['code']){  
+        this.loaderService.setLoading(true)
+        let token
+        try{
+           token = await this.oauthService.loginOauthApi("linkedin_oauth",[{key:"code",value:param["code"]}]);
+           this.router.navigateByUrl("home").then(() => {
+            this.loaderService.setLoading(false)
+           })
+        }catch(err:any){
+          this.displayError(err)
+          this.loaderService.setLoading(false)
+        }
+          
+      }
   })
+
+}
+
+
+
+async onSubmitLogin(){
+  const login$ = this.standardAuthService.loginStandard(this.modelLogin)
+  const result = this.loaderService.showLoaderUntilCompleted(login$);
+  result.subscribe({
+    next: () => {
+      this.router.navigateByUrl('home')
+    },error: (err) => {
+        this.displayError(err,'login')
+    }}
+  )
+}
+
+displayError(err:string,type?:'login' | 'register'){
+  if(type){
+    this.error.type = type
+  }
+  this.messageService.showMessage(err)
+}
+
+  onSubmitRegister(){
+    const register$ = this.standardAuthService.register(this.modelRegister)
+    const result = this.loaderService.showLoaderUntilCompleted(register$);
+    result.subscribe({
+        next:(res) => {
+          console.log("resres",res)
+          this.router.navigateByUrl('home')
+        },error: (err) => {
+          this.displayError(err,'register')
+        }
+      })
   }
 
   onGoogleLogin(){
-    this.googleService.loginOauth();
-    // this.loaderService.setLoading(true);
-  //   this.googleService.userProfileSubject.subscribe(
-  //    {
-  //     next:(data) => {
-  //     if(data.info.email_verified){
-  //       this.authService.loginGoogle(data.info.email).subscribe({
-  //        next: (token) => {
-  //         console.log("tokentoken",token)
-  //       },complete: () => {
-  //         // this.loaderService.setLoading(false)
-  //       }
-  //     })
-  //     }
-  //   },error: (error) => {
-  //     console.log("errorerror",error)
-  //     this.loaderService.setLoading(false)
-  //   }
-  // }
-  // )
+    this.oauthService.loginOauth();
+  }
+
+  onLinkedinLogin(){
+    window.location.href = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${this.oauthService.LINKEDIN_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Flogin&scope=openid%20email%20profile`
   }
 
 }

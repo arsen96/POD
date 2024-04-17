@@ -1,7 +1,4 @@
-    <!-- navbar-->
-<app-header></app-header>
     <!-- Hero Section-->
-    
     <section class="hero py-6">
       <div class="container">
         <!-- Breadcrumbs -->
@@ -29,7 +26,10 @@
                 <p class="lead">Already our customer?</p>
                 <p class="text-muted text-sm">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet.</p>
                 <hr class="my-4">
-                <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                @if(error.type == 'login'){
+                  <app-message></app-message>
+                }
+                <form (ngSubmit)="onSubmitLogin()" #loginForm="ngForm">
                   <div class="mb-3">
                     <label class="form-label" for="emailLogin">Email</label>
                     <input class="form-control" id="emailLogin" name="email" type="text" #emailField="ngModel" [(ngModel)]="modelLogin.email" required>
@@ -50,10 +50,15 @@
                     }
                   </div>
                   <button class="btn btn-dark" type="submit" [disabled]="!loginForm.valid"><i class="fa fa-sign-in-alt me-2"></i> Log in</button>
+                  <div class="flex my-2" >
+                    <a title="Google" class="btn btn-google btn-social-login" (click)="onGoogleLogin()">
+                      <fa-icon [icon]="faGoogle" size="2xl"></fa-icon>                      
+                      Google</a>
+                  </div>
                   <div class="flex my-2">
-                    <cool-google-button color="dark" (click)="onGoogleLogin()">
-                      Connexion avec Google
-                    </cool-google-button>
+                    <a title="LinkedIn" class="btn btn-linkedin btn-social-login" (click)="onLinkedinLogin()">
+                      <fa-icon [icon]="faLinkedin" size="2xl"></fa-icon>                      
+                      LinkedIn</a>
                   </div>
                 </form>
               </div>
@@ -69,20 +74,25 @@
                 <p class="text-muted text-sm">With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
                 <p class="text-muted text-sm">If you have any questions, please feel free to <a href="https://demo.bootstrapious.com/varkala/2-1/contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
                 <hr class="my-4">
-                <form action="https://demo.bootstrapious.com/varkala/2-1/customer-orders.html" method="get">
+
+                @if(error.type == 'register'){
+                  <app-message></app-message>
+                }
+
+                <form (ngSubmit)="onSubmitRegister()" #registerForm="ngForm">
                   <div class="mb-3">
-                    <label class="form-label" for="name">Name</label>
-                    <input class="form-control" id="name" type="text">
+                    <label class="form-label" for="username">Username</label>
+                    <input class="form-control"  name="username" type="text" [(ngModel)]="modelRegister.username">
                   </div>
                   <div class="mb-3">
                     <label class="form-label" for="emailSignup">Email</label>
-                    <input class="form-control" id="emailSignup" type="text">
+                    <input class="form-control" id="emailSignup" name="email" type="email" [(ngModel)]="modelRegister.email">
                   </div>
                   <div class="mb-3">
                     <label class="form-label" for="passwordSignup">Password</label>
-                    <input class="form-control" id="passwordSignup" type="password">
+                    <input class="form-control" id="passwordSignup" name="password" type="password" [(ngModel)]="modelRegister.password">
                   </div>
-                  <button class="btn btn-dark" type="submit"><i class="far fa-user me-2"></i>Register                                </button>
+                  <button class="btn btn-dark" type="submit"><i class="far fa-user me-2"></i>Register</button>
                 </form>
               </div>
             </div>
@@ -224,6 +234,7 @@
         </div>
       </div>
     </div>
+
     <!-- Login Modal    -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -297,5 +308,3 @@
         </div>
       </div>
     </div>
-    <!-- Footer-->
-<app-footer></app-footer>
