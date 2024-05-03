@@ -48,6 +48,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/test/test.component').then(m => m.TestComponent)
     },
     {
+        path: 'request',
+        loadComponent: () => import('./pages/reset-password/request/request.component').then(m => m.RequestComponent)
+    },
+    {
         path: '**',
         redirectTo: 'home'
     }

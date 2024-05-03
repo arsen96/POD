@@ -14,13 +14,17 @@ export class StandardAuth extends AuthServiceBase {
    loginStandard(loginCredentials:FormAuthModel): any{
       const value = super.login(loginCredentials,`${this.postApi}/api/login-token`);
       return value.pipe(
-        map((res: string) => res), // ici, vous pouvez modifier la réponse si nécessaire
         catchError((error) => {
           // Gestion de l'erreur, vous pouvez renvoyer un Observable d'erreur si nécessaire
           console.error('Erreur lors de la connexion:', error);
           return throwError(() => 'Identifiants incorrect')
         })
-      );
+      ).pipe(
+        map((data:string) => {
+          console.log("datadata",data)
+          return data;
+        })
+      )
     }
 
     register(form:FormAuthModel){

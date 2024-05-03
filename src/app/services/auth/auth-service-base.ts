@@ -11,7 +11,7 @@ export interface BearerToken {
 }
 
 export class AuthServiceBase extends BaseService {
-  tokenObs:Observable<string>;
+  tokenObs:Observable<string> | null;
   http = inject(HttpClient) 
   router = inject(Router)
   constructor(){
@@ -58,32 +58,7 @@ export class AuthServiceBase extends BaseService {
   }
 
 
-  protected handleError(error: HttpErrorResponse) {
-    let errorMessage:string | Array<string> = 'An unknown error occurred!';
 
-    console.log("errorerror",error)
-    if (error.error instanceof ErrorEvent) {
-      // Client-side or network error
-      errorMessage = `An error occurred: ${error.error.message}`;
-    } else if(error.error?.error && error.status === 400){
-      if(!Array.isArray(error.error?.message)){
-        errorMessage = error.error.message
-      }else{
-        let message = new Array();
-        errorMessage = new Array();
-        error.error?.message.forEach((err:any) => {
-          if(err.message){
-            message.push(err.message)
-          }
-        })
-        errorMessage = message;
-      }
-    }else if(error){
-      errorMessage = "Un problème est survenu"
-    }
-
-    return throwError(() => errorMessage);
-  }
 
   decodeJWT(token: string) {
     var base64Url = token.split('.')[1];
@@ -98,6 +73,7 @@ export class AuthServiceBase extends BaseService {
 
 
   logout(){
+    this.tokenObs = null;
     localStorage.removeItem("access_token");
     this.router.navigateByUrl("login")
   }

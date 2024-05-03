@@ -1,0 +1,87 @@
+<div class="row justify-content-md-center mt-5">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <form >
+                    @if(!token){
+
+                    
+                    @if(validationErrors.length > 0){
+                        <p class='text-center '>
+                            <small class='text-danger'>{{validationErrors}}</small>
+                        </p>
+                    }
+                    <div class="mb-3">
+                        <label
+                            for="email"
+                            class="form-label">
+                                Adresse e-mail
+                        </label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            required
+                            [(ngModel)]="email"
+                        />
+                        <div>
+                            @if(!messageEmailSend){
+                                <small>
+                                    Entrez votre adresse e-mail, et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                                </small>
+                            }
+                          
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button
+                            (click)="requestAction()"
+                            type="button"
+                            class="btn btn-primary btn-block">Envoyer l'email de réinitialisation du mot de passe</button>
+                    </div>
+                }@else{
+                    <div class="mb-3">
+                        <label
+                            for="password"
+                            class="form-label">
+                                Mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            required
+                            [(ngModel)]="password"
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label
+                            for="password"
+                            class="form-label">
+                                Confirmez votre mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            required
+                            [(ngModel)]="confirmPassword"
+                        />
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button
+                        [disabled]="(confirmPassword.length === 0 || password.length === 0) || (confirmPassword !== password)"
+                            (click)="resetAction()"
+                            type="button"
+                            class="btn btn-primary btn-block">Envoyer l'email de réinitialisation de mot de passe.</button>
+                    </div>
+                }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,12 @@
-@if (displayMessage) {
-    <div class="alert alert-danger" role="alert">
-    @for (currMessage of messageService.message$| async; track currMessage) {
-           <p class="m-0 text-center">{{currMessage}}</p> 
+
+@if (messageService.message$ | async) {
+    @if (displayMessage) {
+        <div *ngIf="messageService.message$ | async as currMessage">
+            <div [class]="'alert alert-'+currMessage.status" role="alert">
+                <ng-container *ngFor="let msg of currMessage.message">
+                    <p class="m-0 text-center">{{ msg }}</p>
+                </ng-container>
+            </div>
+        </div>
     }
-    <button type="button" class="btn-close alert-positioned-close" (click)="close()" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 }

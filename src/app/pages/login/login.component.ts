@@ -11,10 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {faLinkedin,faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
-import { MessageService } from '../../services/message.service';
+import { Message, MessageService } from '../../services/message.service';
 import { MessageComponent } from '../../components/message/message.component';
-import { lastValueFrom } from 'rxjs';
-
+import { RouterLink } from '@angular/router';
 export class FormAuthModel{
   email:string;
   password:string;
@@ -23,7 +22,7 @@ export class FormAuthModel{
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HeaderComponent,MessageComponent, FooterComponent,FormsModule,CoolSocialLoginButtonsModule,FontAwesomeModule ],
+  imports: [RouterLink,HeaderComponent,MessageComponent, FooterComponent,FormsModule,CoolSocialLoginButtonsModule,FontAwesomeModule ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   providers:[MessageService]
@@ -106,7 +105,7 @@ displayError(err:string,type?:'login' | 'register'){
   if(type){
     this.error.type = type
   }
-  this.messageService.showMessage(err)
+  this.messageService.showMessage(err,Message.danger)
 }
 
   onSubmitRegister(){
