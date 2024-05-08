@@ -76,40 +76,35 @@
     </div>
     <div class="row justify-content-between align-items-center mb-4">
       <div class="col-12 col-sm">
-        <ul class="list-inline text-center text-sm-start mb-3 mb-sm-0"> 
-          <li class="list-inline-item"><a class="text-dark" href="#">All Products </a></li>
-          <li class="list-inline-item"><a class="text-muted text-dark-hover" href="#">Clothing </a></li>
-          <li class="list-inline-item"><a class="text-muted text-dark-hover" href="#">Bags</a></li>
-          <li class="list-inline-item"><a class="text-muted text-dark-hover" href="#">Shoes</a></li>
-          <li class="list-inline-item"><a class="text-muted text-dark-hover" href="#">Accessories</a></li>
+        <ul class="list-inline product- text-center text-sm-start mb-3 mb-sm-0"> 
+          <li class="list-inline-item"><a class="text-dark-hover" [ngClass]="{'text-dark':categorySelected == ''}" role="button" (click)="categorySelection()">All Products </a></li>
+          @for (category of productService.categories(); track category.id){
+            <li class="list-inline-item" role="button"><a class="text-dark-hover" [ngClass]="{'text-dark':categorySelected == category.name}" (click)="categorySelection(category)">{{category.name}} </a></li>
+          }
         </ul>
       </div>
       <div class="col-12 col-sm-auto text-center"><a class="btn btn-link px-0" href="#">All products</a></div>
     </div>
     <div class="row">
       <!-- product-->
-
-      @for (product of productService.products; track product.name) {
+      @for (product of recentProducts() ; track product.name) {
         <div class="col-xl-2 col-lg-3 col-md-4 col-6">
           <div class="product product-type-0" data-aos="zoom-in" data-aos-delay="0">
             <div class="product-badge badge bg-dark">{{product.status}}</div><div class="product-image mb-md-3"><a href="https://demo.bootstrapious.com/varkala/2-1/detail-1.html">
                 <div class="product-swap-image"><img class="img-fluid product-swap-image-front" src="https://demo.bootstrapious.com/varkala/2-1/img/product/0950354513_1_1_1.jpg" alt="product"/><img class="img-fluid" src="https://demo.bootstrapious.com/varkala/2-1/img/product/0950354513_2_1_1.jpg" alt="product"/></div></a>
-              <div class="product-hover-overlay"><a class="text-dark text-sm" href="#!">
+                <div class="product-hover-overlay"><a class="text-dark text-sm" href="#!">
                   <svg class="svg-icon text-primary-hover svg-icon-heavy d-sm-none">
                     <use xlink:href="#retail-bag-1"> </use>
-                  </svg><span class="d-none d-sm-inline">{{ product.btn }}</span></a>
+                  </svg><span class="d-none d-sm-inline">Add to cart</span></a>
                 <div><a class="text-dark text-primary-hover me-2" href="#!">
-                    <svg class="svg-icon svg-icon-heavy">
-                      <use xlink:href="#heart-1"> </use>
-                    </svg></a><a class="text-dark text-primary-hover text-decoration-none" href="#!" data-bs-toggle="modal" data-bs-target="#quickView">
-                    <svg class="svg-icon svg-icon-heavy">
-                      <use xlink:href="#expand-1"> </use>
-                    </svg></a></div>
+                  <fa-icon [icon]="faHeart" size="lg"></fa-icon>
+                </a><a class="text-dark text-primary-hover text-decoration-none" href="#!" data-bs-toggle="modal" data-bs-target="#quickView">
+                  <fa-icon [icon]="faExpand" size="lg"></fa-icon></a></div>
               </div>
             </div>
-            <div class="position-relative">
-              <h3 class="text-base mb-1"><a class="text-dark" href="https://demo.bootstrapious.com/varkala/2-1/detail-1.html">{{ product.name }}</a></h3>
-              <p class="text-gray-600 text-sm"> <span>{{ product.price }}                </span>
+            <div class="position-relative product-preview">
+              <h3 class="text-base mb-1 font-weight-bold"><a class="text-dark" href="https://demo.bootstrapious.com/varkala/2-1/detail-1.html">{{ product.name }}</a></h3>
+              <p class="text-gray-600 text-sm"> <span>{{ product.price }} €              </span>
               </p>
               <div class="product-stars text-xs"><i class="fa fa-star text-primary"></i><i class="fa fa-star text-primary"></i><i class="fa fa-star text-primary"></i><i class="fa fa-star text-muted"></i><i class="fa fa-star text-muted"></i></div>
             </div>

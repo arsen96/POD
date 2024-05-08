@@ -5,6 +5,21 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+ 
+ @font-face {
+  font-family: "vremenagrotesk";
+  font-weight: 300;
+  font-style: normal;
+  src: local('Vremena Grotesk Regular'), url('/assets/fonts/VremenaGrotesk.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'vremenagroteskbold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Vremena Grotesk Bold'), url('assets/fonts/VremenaGroteskBold.woff') format('woff');
+}
+
  :root {
     --bs-blue: #007bff;
     --bs-indigo: #6610f2;
@@ -113,8 +128,7 @@
   .h6 {
     margin-top: 0;
     margin-bottom: .5rem;
-    font-family: "vremenagrotesk", sans-serif;
-    font-weight: 700;
+    font-family: "vremenagroteskbold", sans-serif;
     line-height: 1.3
   }
   

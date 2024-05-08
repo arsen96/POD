@@ -4,7 +4,7 @@ import { accessControlsGuard } from './guards/access-controls.guard';
 export const routes: Routes = [
     {
         path: 'home',
-        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
     },
     {
         path: 'about-me',

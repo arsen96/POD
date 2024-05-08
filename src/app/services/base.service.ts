@@ -8,7 +8,6 @@ import { throwError } from 'rxjs';
 export class BaseService {
   postApi = "http://localhost:8000";
   constructor() { }
-
   protected handleError(error: HttpErrorResponse) {
     let errorMessage:string | Array<string> = 'An unknown error occurred!';
 

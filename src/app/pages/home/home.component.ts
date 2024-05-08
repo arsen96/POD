@@ -1,33 +1,68 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, NgModule, OnInit, Signal, ViewChild, ViewEncapsulation, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { ProductService } from '../../services/product.service';
-import Swiper from 'swiper';
 import { SwiperService } from '../../services/swiper.service';
-
+import { Product } from '../../interfaces/product';
+import { ProductPipe } from '../../pipes/product.pipe';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {faHeart } from '@fortawesome/free-regular-svg-icons';
+import {faExpand} from '@fortawesome/free-solid-svg-icons';
+import { Category } from '../../interfaces/category';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule,HeaderComponent,FooterComponent,CarouselModule],
+  imports: [RouterModule,HeaderComponent,FooterComponent,CarouselModule,ProductPipe,CommonModule,FontAwesomeModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  faHeart = faHeart;
+  faExpand = faExpand;
 
+  products = signal<Product[]>([])
+  categorySelected:string = '';
   @ViewChild('brandsSlider') brandsSlider:ElementRef;
   @ViewChild('homeSlider') homeSlider:ElementRef;
   constructor(public productService:ProductService,public swiper:SwiperService){
+    effect(() => {
+      if(this.recentProducts().length === 0 && this.productService.products().length > 0){
+        this.products.set(this.productService.products());
+      }
+    },{allowSignalWrites:true});
+  }
+  
+  recentProducts = computed(() => {
+    return this.products().slice(0,12)
+  })
 
+
+  categorySelection(category?:Category){
+    let products:Array<Product> = [];
+    if(category){
+      this.categorySelected = category.name;
+      products = category.products.flatMap((currentCat) => {
+        return this.productService.products().filter((product) => {
+          return currentCat.id === product.id;
+        })
+      })
+    }else{
+      this.categorySelected = '';
+      products = this.productService.products();
+    }
+
+    this.products.set(products);
   }
 
+  
   ngOnInit(){
-    this.productService.getAll();
-    
-  }
 
+   
+  }
   ngAfterViewInit() {
     this.swiper.hero(this.homeSlider.nativeElement);
     this.swiper.products(this.brandsSlider.nativeElement,{

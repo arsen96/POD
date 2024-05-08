@@ -1,25 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
+import { HttpClient } from '@angular/common/http';
+import { BaseService } from './base.service';
+import { Category } from '../interfaces/category';
+import { Observable, concatMap, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
-  products:Product[] = [];
-  constructor() { }
+export class ProductService extends BaseService{
+  products = signal<Product[]>([]);
+  productsLoaded:any
+  categories = signal<Category[]>([]);
+  http = inject(HttpClient)
+  constructor() {
+    super()
+    this.getAll();
+   }
 
   public getAll(){
-    for(let i=0; i<12;i++){
-      const product:Product =  {
-        name :"Black blouse",
-        price : '$40.00',
-        btn : "Add to cart",
-        img:"https://demo.bootstrapious.com/varkala/2-1/img/product/0950354513_1_1_1.jpg"
-      }
-      if(i % 2 === 0){
-        product.status = "Sold out";
-      }
-      this.products.push(product)
+     this.http.get<Product[]>(`${this.postApi}/products`).pipe(
+      concatMap((products) => {
+        return this.http.get<Category[]>(`${this.postApi}/categories`).pipe(
+          map((categories) => {
+            return { products, categories };
+          })
+        );
+      })
+    )
+    .subscribe((result) => {
+      let {products,categories} = result;
+      this.products.set(products)
+      categories = categories.filter((currCategory) => {
+        return currCategory.products.length > 0
+      })
+      this.categories.set(categories);
+     })
     }
-  }
 }

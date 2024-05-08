@@ -12,7 +12,7 @@ import { MessageService } from './services/message.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),provideAnimations(), provideAnimationsAsync(),
-    provideOAuthClient(),provideHttpClient(withInterceptors([tokenInterceptor]))
+    provideOAuthClient(),provideHttpClient(withInterceptors([tokenInterceptor])),
   ],
   
 };
