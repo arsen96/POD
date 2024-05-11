@@ -4,10 +4,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {faHeart,faUser } from '@fortawesome/free-regular-svg-icons';
 import {faCartShopping,faRightFromBracket,faUser as faUserSolid,faBell,faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { StandardAuth } from '../../services/auth/standard.service';
+import { ProductService } from '../../services/product.service';
+import { LowerCasePipe } from '@angular/common';
 @Component({
   selector: 'app-header',
 standalone: true,
-  imports: [RouterLink,FontAwesomeModule],
+  imports: [RouterLink,FontAwesomeModule,LowerCasePipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -21,6 +23,7 @@ export class HeaderComponent {
   faHeartSolid = faHeartSolid
   authService = inject(StandardAuth)
   router = inject(Router)
+  productService = inject(ProductService)
 
   ngOnInit(){
 

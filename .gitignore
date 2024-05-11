@@ -21,8 +21,7 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
-package-lock.json
-
+*.package-lock.json
 /src/environments/**
 
 # Visual Studio Code

@@ -12,10 +12,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {faHeart } from '@fortawesome/free-regular-svg-icons';
 import {faExpand} from '@fortawesome/free-solid-svg-icons';
 import { Category } from '../../interfaces/category';
+import { ProductComponent } from '../../components/product/product.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule,HeaderComponent,FooterComponent,CarouselModule,ProductPipe,CommonModule,FontAwesomeModule],
+  imports: [RouterModule,HeaderComponent,FooterComponent,CarouselModule,ProductPipe,CommonModule,FontAwesomeModule,
+    ProductComponent,NgxPaginationModule
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -28,17 +32,15 @@ export class HomeComponent implements OnInit {
   categorySelected:string = '';
   @ViewChild('brandsSlider') brandsSlider:ElementRef;
   @ViewChild('homeSlider') homeSlider:ElementRef;
+  p: number = 1;
   constructor(public productService:ProductService,public swiper:SwiperService){
     effect(() => {
-      if(this.recentProducts().length === 0 && this.productService.products().length > 0){
+      if(this.products().length === 0 && this.productService.products().length > 0){
         this.products.set(this.productService.products());
       }
     },{allowSignalWrites:true});
   }
   
-  recentProducts = computed(() => {
-    return this.products().slice(0,12)
-  })
 
 
   categorySelection(category?:Category){
@@ -54,7 +56,7 @@ export class HomeComponent implements OnInit {
       this.categorySelected = '';
       products = this.productService.products();
     }
-
+    this.p = 1;
     this.products.set(products);
   }
 

@@ -31,7 +31,7 @@
       </div>
     </div>
     <!-- Top Bar End-->
-    <nav class="navbar navbar-expand-lg bg-transparent navbar-light px-lg-5 "><a class="navbar-brand" href="index.html">Varkala</a>
+    <nav class="navbar navbar-expand-lg bg-transparent navbar-light px-lg-5 "><a class="navbar-brand" routerLink="/home">Varkala</a>
       <ul class="list-inline mb-0 d-block d-lg-none">
         <li class="list-inline-item me-3"><a class="text-dark text-primary-hover" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
             <svg class="svg-icon navbar-icon">
@@ -55,17 +55,13 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav mt-3 mt-lg-0">
-          <li class="nav-item">
-            <a class="nav-link "  routerLink="/home">Accueil</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link " routerLink="/shop">Boutique</a>
-          </li>
+          @for(category of productService.categories();track category.id){
+            <li class="nav-item">
+              <a class="nav-link "  [routerLink]="'/shop/'+category.name | lowercase">{{category.name}}</a>
+            </li>
+          }
           <li class="nav-item">
             <a class="nav-link "  routerLink="/detail">Détail</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link "  routerLink="/about-me">A propos de moi</a>
           </li>
           <li class="nav-item">
             <a class="nav-link "  routerLink="/contact">Contact</a>
