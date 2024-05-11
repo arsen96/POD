@@ -4,8 +4,30 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
-
+ @use '@angular/material' as mat;
+ @include mat.core();
  
+ $my-primary: mat.define-palette(mat.$indigo-palette, 500);
+ $my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+ $my-warn: mat.define-palette(mat.$red-palette);
+ $slider-theme: mat.define-light-theme((
+  // color: (
+  //   primary: $my-primary,
+  //   accent: $my-accent,
+  //   warn: $my-warn,
+  // ),
+  typography: mat.define-typography-config(),
+  density: 0,
+ ));
+ 
+// @include mat.core-theme($my-theme);
+// @include mat.button-theme($my-theme);
+@include mat.slider-theme($slider-theme);
+.mat-slider-theme-only {
+  --mdc-slider-handle-shape: 50%;
+  --mdc-slider-handle-width: 24px;
+  --mdc-slider-handle-height: 24px;
+}
  @font-face {
   font-family: "vremenagrotesk";
   font-weight: 300;
@@ -18291,3 +18313,4 @@
   background-color: #574c4c44;
   border-radius: 10vh;
 }
+

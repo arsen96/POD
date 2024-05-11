@@ -36,11 +36,29 @@ export class ShopComponent {
   sortBy:string = ''; 
   categoryProducts = signal<Partial<Category>>({});  
   currentCategory:Category
+  originalCategory:Category
   selectedCategory:string = CategorySort.date_new_to_old;
   currentPage: number = 1;
   itemsPerPage:number = 12;
+  minPriceSelected:number = 0;
+  maxPriceSelected:number = 0;
+  maxPriceProduct:number = 0;
+  minPriceProduct:number = 0;
+  maxPrice:number;
+  minPrice:number;
   get CategorySort(){
     return CategorySort;
+  }
+
+  priceFilter():any {
+    this.currentPage = 1;
+    if(this.selectedCategory !== CategorySort.price_low_to_hight){
+      this.onChange(CategorySort.price_low_to_hight);
+    }
+    this.selectedCategory = CategorySort.price_low_to_hight;
+    this.currentCategory.products = this.originalCategory.products.filter((element) => {
+      return element.price >= this.minPriceSelected && element.price <=this.maxPriceSelected
+    })
   }
   
   constructor(public route:ActivatedRoute,public router:Router, public serializer: UrlSerializer){
@@ -58,13 +76,21 @@ export class ShopComponent {
         this.currentPage = params['p'];
       }
     })
+
   }
 
   currentProducts = computed(() => {
-      this.currentCategory =   this.productService.getCategoryProductsByName(this.catName());
-      if(this.currentCategory){
+      this.currentCategory =   {...this.productService.getCategoryProductsByName(this.catName())};
+      this.originalCategory = {...this.currentCategory};
+      if(this.currentCategory?.products){
         this.onChange(this.sortBy);
+        const prices = this.currentCategory.products.map(element => {
+          return element.price
+        })
+        this.maxPriceSelected = this.maxPriceProduct = this.maxPrice = Math.max(...prices);
+        this.minPriceSelected = this.minPriceProduct = this.minPrice = Math.min(...prices);
       }
+      
       return this.currentCategory;
   })
 
@@ -81,7 +107,6 @@ export class ShopComponent {
 
   pageChanged($event:number){
     this.currentPage = $event;
-    console.log(" this.currentPage", this.currentPage)
     this.addPageParameter('p',this.currentPage);
   }
 

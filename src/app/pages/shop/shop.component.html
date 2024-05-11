@@ -17,14 +17,14 @@
               <li class="breadcrumb-item active">Shop                                   </li>
             </ol>
             <header class="product-grid-header">
-              @if(currentProducts()){
+              @if(currentProducts() &&  currentProducts().products){
                 <div class="me-3 mb-3">
                   Showing <strong>{{(currentPage * itemsPerPage) - itemsPerPage + 1}}-{{currentPage * itemsPerPage > currentProducts().products.length ? currentProducts().products.length : currentPage * itemsPerPage}} </strong>of <strong>{{currentProducts().products.length}} </strong>products
                  </div>
               }
             
               <div class="me-3 mb-3">
-                @if(currentProducts() && currentProducts().products.length > 24){
+                @if(currentProducts() &&  currentProducts().products && currentProducts().products.length > 24){
                   <span class="me-2">Show</span>
                   <a class="product-grid-header-show" [ngClass]="{'active':itemsPerPage === 12}" role="button"  (click)="itemsPerPage = 12">12</a>
                   <a class="product-grid-header-show " [ngClass]="{'active':itemsPerPage === 24}" role="button" (click)="itemsPerPage = 24">24</a>
@@ -84,13 +84,15 @@
               <div class="expand-lg collapse" id="priceFilterMenu">
                 <h5 class="sidebar-heading d-none d-lg-block">Price  </h5>
                 <!-- <div class="mt-4 mt-lg-0" id="slider-snap"> </div> -->
-                <mat-slider min="0" max="250"  discrete >
-                  <input value="40" matSliderStartThumb>
-                  <input value="110" matSliderEndThumb>
+                <mat-slider [min]="minPriceProduct" [max]="maxPriceProduct" discrete >
+                  <input [value]="minPriceProduct"  [(ngModel)]="minPriceSelected" (input)="priceFilter()"  matSliderStartThumb>
+                  <input [value]="maxPriceProduct" [(ngModel)]="maxPriceSelected" (input)="priceFilter()" matSliderEndThumb>
                 </mat-slider>
+                
+                
                 <div class="nouislider-values">
-                  <div class="min">From $<span id="slider-snap-value-lower"></span></div>
-                  <div class="max">To $<span id="slider-snap-value-upper"></span></div>
+                  <div class="min">From {{minPriceProduct}} €<span id="slider-snap-value-lower"></span></div>
+                  <div class="max">To {{maxPriceProduct}} €<span id="slider-snap-value-upper"></span></div>
                   <input class="slider-snap-input" type="hidden" name="pricefrom" id="slider-snap-input-lower" value="40">
                   <input class="slider-snap-input" type="hidden" name="priceto" id="slider-snap-input-upper" value="110">
                 </div>
