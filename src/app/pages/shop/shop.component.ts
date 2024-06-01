@@ -11,7 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import { PaginationEvents } from 'swiper/types';
-
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export enum CategorySort{
   'featured'='featured',
   'bestSelling'='bestSelling',
@@ -25,17 +26,18 @@ export enum CategorySort{
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule,HeaderComponent,FooterComponent,MatSliderModule,ProductComponent,FormsModule, NgxPaginationModule],
+  imports: [CommonModule,HeaderComponent,FontAwesomeModule,FooterComponent,MatSliderModule,ProductComponent,FormsModule, NgxPaginationModule],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css'
 })
 export class ShopComponent {
   productService = inject(ProductService)
   products = signal<Product[]>([]);
-  catName = signal<string>('')
+  catSlug = signal<string>('')
   sortBy:string = ''; 
   categoryProducts = signal<Partial<Category>>({});  
   currentCategory:Category
+  mainCategory:Category
   originalCategory:Category
   selectedCategory:string = CategorySort.date_new_to_old;
   currentPage: number = 1;
@@ -50,6 +52,8 @@ export class ShopComponent {
     return CategorySort;
   }
 
+  faClose = faClose;
+
   priceFilter():any {
     this.currentPage = 1;
     if(this.selectedCategory !== CategorySort.price_low_to_hight){
@@ -63,7 +67,8 @@ export class ShopComponent {
   
   constructor(public route:ActivatedRoute,public router:Router, public serializer: UrlSerializer){
     this.route.params.subscribe(async (params:Params) => {
-      this.catName.set(params['id']);
+      this.catSlug.set(params['id']);
+      console.log("tesstt")
     })
 
     this.route.queryParams.subscribe(async (params:Params) => {
@@ -75,13 +80,30 @@ export class ShopComponent {
       if(params['p']){
         this.currentPage = params['p'];
       }
+
+      if(params['category']){
+        this.catSlug.set(params['category'])
+      }
+
     })
 
   }
 
+  loadSubCategoryProducts(category:Category){
+    this.addPageParameter('category',category.slug);
+  }
+
   currentProducts = computed(() => {
-      this.currentCategory =   {...this.productService.getCategoryProductsByName(this.catName())};
+    const result = {...this.productService.getCategoryProductsBySlug(this.productService.categories(),this.catSlug())};
+    if(result){
+      this.currentCategory =  result as Category
+      
       this.originalCategory = {...this.currentCategory};
+      const mainCategory = this.productService.searchMainCategoryById(this.currentCategory.main ? this.currentCategory.id : this.currentCategory.parentId);
+      if(mainCategory){
+        this.mainCategory = mainCategory
+        this.manageCategoryCollapseToggle();
+      }
       if(this.currentCategory?.products){
         this.onChange(this.sortBy);
         const prices = this.currentCategory.products.map(element => {
@@ -92,7 +114,33 @@ export class ShopComponent {
       }
       
       return this.currentCategory;
+    }
+    return result; 
   })
+
+  rmChildCategorySelection($event:Event){
+    $event.stopPropagation();
+    this.manageCategoryCollapseToggle(false);
+    this.router.navigateByUrl('shop/'+this.mainCategory.slug)
+    if(this.mainCategory?.slug){
+      this.catSlug.set(this.mainCategory.slug);
+    }
+  }
+
+  manageCategoryCollapseToggle(show = true){
+    if(this.mainCategory){
+      this.mainCategory.widgets.forEach((item) => {
+        item.show = false;
+        if(item.widgets && show){
+          item.widgets.forEach((elem) => {
+            if(this.catSlug() === elem.slug){
+              item.show = true;
+            }
+          })
+        }
+      })
+    }
+  }
 
   onChange(event:Event | string){
     let value;

@@ -32,31 +32,37 @@ export class ProductService extends BaseService{
     .subscribe((result) => {
       let {products,categories} = result;
       this.products.set(products)
-      categories = categories.filter((currCategory) => {
-        return currCategory.products.length > 0
-      })
-
-      categories = categories.map(currCategory => {
-        let currProduct = currCategory.products.map((catProduct) => {
-          return products.find((currProduct) => {
-            return currProduct.id === catProduct.id;
-          })
-        })
-        currProduct = currProduct.sort((a:any,b:any) => {
-          return (new Date(b.created_at) as any) - (new Date(a.created_at) as any);
-        })
-        return {...currCategory,products:currProduct}
-      }) as Category[];
-
       this.categories.set(categories);
+      console.log("categories",categories)
      })
     }
 
-    getCategoryProductsByName(name:string):Category{
-      return this.categories().find((category) => {
-        return category.name.toLowerCase() === name;
-      }) as Category;
+    getCategoryProductsBySlug(categories: Category[], slug: string): Category | undefined {
+      let category;
+      for (const category of categories) {
+        if (category.slug === slug) {
+          return category;
+        }
+        if (category.widgets) {
+          const found = this.getCategoryProductsBySlug(category.widgets, slug);
+          if (found) {
+            return found;
+          }
+        }
+      }
+      return category; 
     }
+
+    searchMainCategoryById(categoryId:number): Category | undefined{
+      let selectedCategory;
+      for (const category of this.categories()) {
+        if(category.id === categoryId){
+          selectedCategory =  category;
+        }
+      }
+      return selectedCategory;
+    }
+
 
     sortByCategoryProducts(value:string,categoryInstance:Category){
       if(value === String(CategorySort.date_new_to_old) || value === String(CategorySort.date_old_to_now)){
@@ -78,11 +84,11 @@ export class ProductService extends BaseService{
       }else if(value === String(CategorySort.a_z) || value === String(CategorySort.z_a)){
         categoryInstance.products.sort((a, b) => {
           if(value === String(CategorySort.a_z)){
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
+            if (a.title < b.title) return -1;
+            if (a.title > b.title) return 1;
           }else{
-            if (a.name < b.name) return 1;
-            if (a.name > b.name) return -1;
+            if (a.title < b.title) return 1;
+            if (a.title > b.title) return -1;
           }
           return 0;
         });
